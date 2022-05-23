@@ -4,8 +4,8 @@ const path = require('path');
 const filePathBundle = path.join(__dirname, 'project-dist/bundle.css');
 const filePathStyle = path.join(__dirname, 'styles');
 
-function mergeBundleCssFile() {
-  fs.promises.readdir(filePathStyle, { withFileTypes: true })
+async function mergeBundleCssFile() {
+  await fs.promises.readdir(filePathStyle, { withFileTypes: true })
   // If promise resolved and
   // datas are fetched
   .then(elements => {
@@ -36,15 +36,15 @@ function mergeBundleCssFile() {
 }
 
 // Clearing the contents of the bundle.css
-function clearBundleFile() {
+async function clearBundleFile() {
   if (filePathBundle) {
-    fs.promises.rm(filePathBundle, { recursive: true, force: true });
+    await fs.promises.rm(filePathBundle, { recursive: true, force: true });
   }
 }
 
-function createBundle() {
-  clearBundleFile()
-  mergeBundleCssFile();
+async function createBundle() {
+  await clearBundleFile()
+  await mergeBundleCssFile();
 }
 
 createBundle();
