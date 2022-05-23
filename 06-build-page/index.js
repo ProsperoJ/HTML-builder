@@ -14,17 +14,17 @@ const filePathCopy = path.join(__dirname, 'project-dist/assets');
 
 // Сreating a folder if it does not exist
 async function init(folder) {
-  await fs.access(folder, fs.F_OK, (err) => {
-    if (err) {
-      fs.mkdir(folder, (err) => {
-        if (err) {
-          throw err;
-        }
-        console.log(`Create folder "${path.basename(folder)}"!`);
-      })
-    }
-    //folder exists
-  })
+  let dir;
+  try {
+    dir = await fs.promises.access(folder);
+  } catch (e) {
+    await fs.promises.mkdir(folder, (err) => {
+      if (err) {
+        throw err;
+      }
+    })
+    console.log(`Create folder "${path.basename(folder)}"!`);
+  }
 }
 
 // Added the content of the templates to HTML
@@ -108,7 +108,7 @@ async function clearFolder() {
 
 async function copyAssetsFile() {
   await init(filePathCopy);
-  await fs.readdir(filePathOrigin, (err, elements) => {
+  fs.readdir(filePathOrigin, (err, elements) => {
     if (err) {
       throw err;
     }
@@ -138,17 +138,11 @@ async function copyAssetsFile() {
 }
 
 async function buildPage() {
-  clearFolder();
+  await clearFolder();
   await init(mainFolderPath);
-  setTimeout(() => {
-    changeTemplate();
-  }, 500);
-  setTimeout(() => {
-    mergeStyleCssFile();
-  }, 1000);
-  setTimeout(() => {
-    copyAssetsFile();
-  }, 1500);
+  await changeTemplate();
+  await mergeStyleCssFile();
+  await copyAssetsFile();
 }
 
 buildPage();
