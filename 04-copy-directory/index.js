@@ -4,31 +4,31 @@ const path = require("path");
 const filePathOrigin = path.join(__dirname, "files");
 const filePathCopy = path.join(__dirname, "files-copy");
 
-function func() {
-  init();
-  clearCopyFolder();
-  copyFiles();
+async function func() {
+  await init();
+  await clearCopyFolder();
+  await copyFiles();
 }
 
 // Сreating a folder if it does not exist
-function init() {
-  fs.access(filePathCopy, fs.F_OK, (err) => {
-    if (err) {
-      fs.mkdir(filePathCopy, (err) => {
-        if (err) {
-          throw err;
-        }
-        console.log("Create folder!");
-      });
-    }
-    //folder exists
-  });
+async function init() {
+  let dir;
+  try {
+    dir = await fs.promises.access(filePathCopy);
+  } catch (e) {
+    await fs.promises.mkdir(filePathCopy, (err) => {
+      if (err) {
+        throw err;
+      }
+    })
+    console.log('Create folder!');
+  }
 }
 
 // Clearing the contents of the files-copy folder
-function clearCopyFolder() {
+async function clearCopyFolder() {
   if (filePathCopy) {
-    fs.promises.readdir(filePathCopy)
+    await fs.promises.readdir(filePathCopy)
       // If promise resolved and
       // datas are fetched
       .then((elements) => {
@@ -49,8 +49,8 @@ function clearCopyFolder() {
 }
 
 // Copy the contents of the files folder to folder-copy
-function copyFiles() {
-  fs.promises
+async function copyFiles() {
+  await fs.promises
     .readdir(filePathOrigin)
     // If promise resolved and
     // datas are fetched
