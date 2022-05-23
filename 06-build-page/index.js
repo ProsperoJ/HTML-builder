@@ -75,8 +75,8 @@ async function mergeStyleCssFile() {
       if (file.isFile()) {
         const extension = path.extname(file.name)
         if (extension === '.css') {
-          const pathFile = path.join(__dirname, `styles/${file.name}`)
-          fs.readFile(pathFile, 'utf-8', (err, content) => {
+          // const pathFile = path.join(__dirname, `styles/${file.name}`)
+          fs.readFile(path.join(filePathStyle, file.name), 'utf-8', (err, content) => {
             if (err) {
               throw err;
             }
@@ -99,14 +99,11 @@ async function mergeStyleCssFile() {
 // mergeStyleCssFile()
 
 // Clearing the contents of the style.css
-async function clearCssFile() {
-  fs.truncate(styleCssPath, 0, (err) => {
-    if (err) {
-      throw err
-    }
-    console.log(`"${path.basename(styleCssPath)}" cleared!`)})
+async function clearFolder() {
+  if (mainFolderPath) {
+    await fs.promises.rm(mainFolderPath, { recursive: true, force: true });
+  }
 }
-// clearCssFile()
 
 
 async function copyAssetsFile() {
@@ -141,6 +138,7 @@ async function copyAssetsFile() {
 }
 
 async function buildPage() {
+  clearFolder();
   await init(mainFolderPath);
   setTimeout(() => {
     changeTemplate();

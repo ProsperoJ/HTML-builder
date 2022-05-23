@@ -14,7 +14,7 @@ fs.promises.readdir(filePath, { withFileTypes: true })
         if (err) {
           throw err;
         }
-        console.log(`${path.parse(file.name).name} - ${path.extname(file.name).slice(1)} - ${stats.size / 1000}kb}`);
+        console.log(`${path.parse(file.name).name} - ${path.extname(file.name).slice(1)} - ${stats.size / 1000}kb`);
       })
     }
   }
